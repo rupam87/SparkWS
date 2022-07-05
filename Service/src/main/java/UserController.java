@@ -18,7 +18,7 @@ public class UserController {
         // http://localhost:8081/users/2
         get("/users/:id", (request, response) -> "User: username=test, email=test@test.net");
 
-        //http://localhost:8081/hello/rupam
+        //http://localhost:8081/hello/<name>
         get("/hello/:name", (req, res) -> {
             return "Hello World to :" + req.params(":name");
         });
@@ -34,7 +34,8 @@ public class UserController {
                 response.body(result.values().stream().findFirst().get());
                 return response.body();
             } catch (Throwable t) {
-                return "Unable to Fetch User with id : " + request.params(":id");
+                return "Unable to Fetch User with id : " + request.params(":id") +
+                        "\r\n" + "Exception in routing logic : " + t.getLocalizedMessage();
             }
         });
 
@@ -47,10 +48,11 @@ public class UserController {
                 Map<Integer, String> result = userService.addUser(reqBody);
                 response.status(result.keySet().stream().findFirst().get());
                 response.body(result.values().stream().findFirst().get());
+                return response.body();
             } catch (Throwable t) {
-                return "Unable to Add User with body : " + request.body();
+                return "Unable to Add User with body : " + request.body()+
+                        "\r\n" + "Exception in routing logic : " + t.getLocalizedMessage();
             }
-            return response.body();
         });
     }
 
